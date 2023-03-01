@@ -12,7 +12,7 @@ from matplotlib.pyplot import *
 from pylab import *
 
 def fun_range(fun_index):
-    d = 30
+    d = 30  #种群数量
     if fun_index == 1:
         l = [-100]
         u = [100]
@@ -33,6 +33,9 @@ def fun_range(fun_index):
     elif fun_index == 6:
         l = [-50]
         u = [50]
+    elif fun_index == 7:
+        l = [-10]
+        u = [10]
     return l, u, d
 
 
@@ -64,6 +67,8 @@ def ben_functions(x, function_index):
             (((x[:-1] + 1) / 4) ** 2) * (1 + 10 * ((np.sin(pi * (1 + (x[1:] + 1) / 4)))) ** 2)) + (
                                   (x[Dim - 1] + 1) / 4) ** 2) + sum(
             k * ((x - a) ** m) * (x > a) + k * ((-x - a) ** m) * (x < (-a)))
+    elif function_index ==7:
+        s = sum(x)
     return s
 
 
@@ -178,9 +183,10 @@ def main():
     # fun_index = 4: Eggholder
     # fun_index = 5: Branin
     # fun_index = 6: Penalized
-    fun_index = 1   #设置范围
-    max_it = 1000
-    npop = 50   #种群数量
+    # fun_index = 7: 自定义函数
+    fun_index = 7   #设置范围，目标函数
+    max_it = 1000   #迭代次数
+    npop = 50
     best_x, best_f, his_best_fit = AHA(fun_index, max_it, npop)
     if best_f > 0:
         yscale('log')
