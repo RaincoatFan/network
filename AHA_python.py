@@ -11,7 +11,6 @@ from torch import randperm
 from matplotlib.pyplot import *
 from pylab import *
 
-
 def fun_range(fun_index):
     d = 30
     if fun_index == 1:
@@ -179,9 +178,9 @@ def main():
     # fun_index = 4: Eggholder
     # fun_index = 5: Branin
     # fun_index = 6: Penalized
-    fun_index = 1
+    fun_index = 1   #设置范围
     max_it = 1000
-    npop = 50
+    npop = 50   #种群数量
     best_x, best_f, his_best_fit = AHA(fun_index, max_it, npop)
     if best_f > 0:
         yscale('log')
