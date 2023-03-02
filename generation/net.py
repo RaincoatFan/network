@@ -50,6 +50,30 @@ def main():
     for item in range(len(edge)):
         G.add_edge(int(edge[item][0]), int(edge[item][1]), name=distance[item])
 
+    #0302
+    count = 0
+    center_list = []
+    for item in range(len(id_list)):
+        if sort_tag[item] == '1':
+            center_list.append(id_list[item + count])
+            id_list.remove(id_list[item + count])
+            count -= 1
+        print(id_list, center_list)
+
+    a = [[0, 1, 0, 1, 0, 1, 0, 1],[1, 0, 1, 0, 1, 0, 1, 0]]
+    b = []
+    for item in a:
+        print('000',item)
+        for center_count in range(len(item)):
+            print('111',item[center_count])
+            if item[center_count] == 1:
+                print('444',center_count)
+                b.append(id_list[center_count])
+                print('333', b)
+        b = []
+
+
+
     #画图
     pos = coor_list
     # 按pos所定位置画出节点,无标签无权值
