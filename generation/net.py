@@ -35,21 +35,6 @@ def main():
     for item in id_list:
         G.add_node(item, desc=str(item))
 
-    edge = []   #边
-    with open('edge-8.txt', 'r', encoding='utf-8') as file:
-        for line in file:
-            line = tuple(line.replace('\r', '').replace('\n', '').replace('\t', '').split(','))
-            edge.append(line)
-
-    distance = []   #距离集合
-    for item in range(len(edge)):
-        s = pow(pow(x_list[int(edge[item][0])]-x_list[int(edge[item][1])],2)+pow(y_list[int(edge[item][0])]-y_list[int(edge[item][1])],2),0.5)
-        s = round(s, 2)
-        distance.append(s)
-
-    for item in range(len(edge)):
-        G.add_edge(int(edge[item][0]), int(edge[item][1]), name=distance[item])
-
     #0302
     count = 0
     center_list = []
@@ -62,15 +47,48 @@ def main():
 
     a = [[0, 1, 0, 1, 0, 1, 0, 1],[1, 0, 1, 0, 1, 0, 1, 0]]
     b = []
+    c = []
+    # array = set()
+    num = 0
     for item in a:
         print('000',item)
-        for center_count in range(len(item)):
-            print('111',item[center_count])
-            if item[center_count] == 1:
-                print('444',center_count)
-                b.append(id_list[center_count])
-                print('333', b)
+        for id_count in range(len(item)):
+            print('111',item[id_count])
+            if item[id_count] == 1:
+                print('222',id_count)
+                b.append(id_list[id_count])
+        b.append(center_list[num])
+        c.append(b)
         b = []
+        num += 1
+
+    with open('edge.txt', 'w', encoding='utf-8') as file:
+        for item in range(len(c)):
+            # print('item',b[item])
+            for k in range(len(c[item])):
+                for j in range(k+1, len(c[item])):
+                    # print('j',b[j])
+                    file.writelines(str(c[item][k])+','+str(c[item][j])+'\n')
+    file.close()
+
+    edge = []   #边
+    with open('edge.txt', 'r', encoding='utf-8') as file:
+        for line in file:
+            line = tuple(line.replace('\r', '').replace('\n', '').replace('\t', '').split(','))
+            edge.append(line)
+    print('aaaaaa',edge)
+
+
+    distance = []   #距离集合
+    for item in range(len(edge)):
+        s = pow(pow(x_list[int(edge[item][0])]-x_list[int(edge[item][1])],2)+pow(y_list[int(edge[item][0])]-y_list[int(edge[item][1])],2),0.5)
+        s = round(s, 2)
+        distance.append(s)
+
+    for item in range(len(edge)):
+        G.add_edge(int(edge[item][0]), int(edge[item][1]), name=distance[item])
+
+
 
 
 
