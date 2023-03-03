@@ -1,9 +1,12 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 import csv
+# from networkx.algorithms import approximation as approx
 
-def main():
+array = []
+def generation():
     G = nx.Graph()
+    G1 = nx.Graph()
     # 添加对应的边和点
     id_tag = []
     sort_tag = []
@@ -48,7 +51,6 @@ def main():
     a = [[0, 1, 0, 1, 0, 1, 0, 1],[1, 0, 1, 0, 1, 0, 1, 0]]
     b = []
     c = []
-    # array = set()
     num = 0
     for item in a:
         print('000',item)
@@ -61,6 +63,7 @@ def main():
         c.append(b)
         b = []
         num += 1
+
 
     with open('edge.txt', 'w', encoding='utf-8') as file:
         for item in range(len(c)):
@@ -88,7 +91,22 @@ def main():
     for item in range(len(edge)):
         G.add_edge(int(edge[item][0]), int(edge[item][1]), name=distance[item])
 
+    # cycle = nx.simulated_annealing_tsp(G)
+    # edge_list = list(nx.utils.pairwise(cycle))
+    # cycle = approx.simulated_annealing_tsp(G, "greedy", source="D")
+    # cost = sum(G[n][nbr]["weight"] for n, nbr in nx.utils.pairwise(cycle))
+    # print('ddddd',cycle,cost)
+    # for item in range(len(edge)):
+    #     print('asdfggg',item)
+    #     tuple(edge[item][0],edge[item][1],)
 
+    # for item in c[0]:
+    #     print('asdfg',item)
+    #     G1.add_node(item, desc=str(item))
+    # for item in range(len(edge)):
+    #     G1.add_edge(int(edge[item][0]), int(edge[item][1]), name=distance[item])
+
+    # print('111111111111111111',nx.floyd_warshall_numpy(G))
 
 
 
@@ -105,5 +123,4 @@ def main():
     plt.title('Net', fontsize=10)
     plt.show()
 
-if __name__ == '__main__':
-    main()
+generation()
