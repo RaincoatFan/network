@@ -1,6 +1,7 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 import csv
+from networkx.algorithms import approximation as approx
 
 def generation():
     G = nx.Graph()
@@ -107,4 +108,59 @@ def generation():
     plt.title('Net', fontsize=10)
     plt.show()
 
+
+
+
+    # 提取子图
+    G1 = nx.Graph()
+    edlist = G.edges(1)
+    subgraph_node_list = []
+    subgraph_node_list.append(1)
+    for item, spot in edlist:
+        subgraph_node_list.append(spot)
+
+    print('subgraph_edge_list',subgraph_node_list)
+    with open('subgraph_edge.txt', 'w', encoding='utf-8') as file:
+        for item in range(len(subgraph_node_list)):
+            print('item',item)
+            for k in range(item+1, len(subgraph_node_list)):
+                print('k',k)
+                file.writelines(str(subgraph_node_list[item])+','+str(subgraph_node_list[k])+'\n')
+
+    subgraph_edge_list = []
+
+    with open('subgraph_edge.txt', 'r', encoding='utf-8') as file:
+        for line in file:
+            line = tuple(line.replace('\r', '').replace('\n', '').replace('\t', '').split(','))
+            subgraph_edge_list.append(line)
+    print('edge',subgraph_edge_list)
+
+    # 处理子图距离 计算所有边的距离，放入 distance 集合，用于network的标签
+    subgraph_distance = []   #距离集合
+    for item in range(len(subgraph_edge_list)):
+        s = pow(pow(x_list[int(subgraph_edge_list[item][0])]-x_list[int(subgraph_edge_list[item][1])],2)+pow(y_list[int(subgraph_edge_list[item][0])]-y_list[int(subgraph_edge_list[item][1])],2),0.5)
+        s = round(s, 2)
+        subgraph_distance.append(s)
+    print('bbbbbbbbbbbbbbb',subgraph_distance)
+
+    for item in subgraph_node_list:
+        G1.add_node(item, desc=str(item))
+
+    # 子图G1加入 边 标签
+    for item in range(len(subgraph_edge_list)):
+        G1.add_edge(int(subgraph_edge_list[item][0]), int(subgraph_edge_list[item][1]), name=subgraph_distance[item])
+
+    # print('0节点到4节点最短路径: ', nx.shortest_path(G1, source=1, target=9))
+    #
+    # SA_tsp = nx.approximation.simulated_annealing_tsp
+    # method = lambda G1, wt: SA_tsp(G1, 'greedy', weight=wt, temp=500)
+    # res = SA_tsp(G1, method=method)
+    # print('tsp',res)
+
+    cycle = approx.simulated_annealing_tsp(G1, "greedy", source=2)
+    # cost = sum(G1[n][nbr]["weight"] for n, nbr in nx.utils.pairwise(cycle))
+    print('cycle',cycle)
+    # incycle = approx.simulated_annealing_tsp(G, cycle, source=2)
+    # print('incycle', incycle)
+# 执行
 generation()
