@@ -1,13 +1,11 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 import csv
-# from networkx.algorithms import approximation as approx
 
-array = []
 def generation():
     G = nx.Graph()
-    G1 = nx.Graph()
-    # 添加对应的边和点
+
+    # 从csv文件中读取节点id，类别，坐标
     id_tag = []
     sort_tag = []
     x_tag = []
@@ -38,9 +36,10 @@ def generation():
     for item in id_list:
         G.add_node(item, desc=str(item))
 
-    #0302
+    # 分离配送中心 与 需求节点
+    # 具体操作：将配送中心节点 至 center_list
     count = 0
-    center_list = []
+    center_list = []    #配送中心节点集合
     for item in range(len(id_list)):
         if sort_tag[item] == '1':
             center_list.append(id_list[item + count])
@@ -48,6 +47,7 @@ def generation():
             count -= 1
         print(id_list, center_list)
 
+    # 种群
     a = [[0, 1, 0, 1, 0, 1, 0, 1],[1, 0, 1, 0, 1, 0, 1, 0]]
     b = []
     c = []
@@ -64,7 +64,8 @@ def generation():
         b = []
         num += 1
 
-
+    # 处理边（1）所有属于一个配送中心的点之间都有边
+    # 先放入 edge.txt 中
     with open('edge.txt', 'w', encoding='utf-8') as file:
         for item in range(len(c)):
             # print('item',b[item])
@@ -74,41 +75,24 @@ def generation():
                     file.writelines(str(c[item][k])+','+str(c[item][j])+'\n')
     file.close()
 
+    # 处理边（2）将边放入 edge 集合中，用于network的边集
     edge = []   #边
     with open('edge.txt', 'r', encoding='utf-8') as file:
         for line in file:
             line = tuple(line.replace('\r', '').replace('\n', '').replace('\t', '').split(','))
             edge.append(line)
-    print('aaaaaa',edge)
+    print('edge',edge)
 
-
+    # 处理距离 计算所有边的距离，放入 distance 集合，用于network的标签
     distance = []   #距离集合
     for item in range(len(edge)):
         s = pow(pow(x_list[int(edge[item][0])]-x_list[int(edge[item][1])],2)+pow(y_list[int(edge[item][0])]-y_list[int(edge[item][1])],2),0.5)
         s = round(s, 2)
         distance.append(s)
 
+    # G加入 边 标签
     for item in range(len(edge)):
         G.add_edge(int(edge[item][0]), int(edge[item][1]), name=distance[item])
-
-    # cycle = nx.simulated_annealing_tsp(G)
-    # edge_list = list(nx.utils.pairwise(cycle))
-    # cycle = approx.simulated_annealing_tsp(G, "greedy", source="D")
-    # cost = sum(G[n][nbr]["weight"] for n, nbr in nx.utils.pairwise(cycle))
-    # print('ddddd',cycle,cost)
-    # for item in range(len(edge)):
-    #     print('asdfggg',item)
-    #     tuple(edge[item][0],edge[item][1],)
-
-    # for item in c[0]:
-    #     print('asdfg',item)
-    #     G1.add_node(item, desc=str(item))
-    # for item in range(len(edge)):
-    #     G1.add_edge(int(edge[item][0]), int(edge[item][1]), name=distance[item])
-
-    # print('111111111111111111',nx.floyd_warshall_numpy(G))
-
-
 
     #画图
     pos = coor_list
