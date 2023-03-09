@@ -108,57 +108,51 @@ def generation():
     plt.title('Net', fontsize=10)
     plt.show()
 
+    # 计算所有子图的最短路径
+    sum_tsp = []
+    for center_item in center_list:
+        # 提取子图，并计算子图 tsp-sa 花销
+        G1 = nx.Graph()
+        edlist = G.edges(center_item)
+        subgraph_node_list = []
+        subgraph_node_list.append(center_item)
+        print('subgraph_node_list',subgraph_node_list)
+        for item, spot in edlist:
+            subgraph_node_list.append(spot)
 
+        with open('subgraph_edge.txt', 'w', encoding='utf-8') as file:
+            for item in range(len(subgraph_node_list)):
+                for k in range(item+1, len(subgraph_node_list)):
+                    file.writelines(str(subgraph_node_list[item])+','+str(subgraph_node_list[k])+'\n')
 
+        subgraph_edge_list = []
 
-    # 提取子图
-    G1 = nx.Graph()
-    edlist = G.edges(1)
-    subgraph_node_list = []
-    subgraph_node_list.append(1)
-    for item, spot in edlist:
-        subgraph_node_list.append(spot)
+        with open('subgraph_edge.txt', 'r', encoding='utf-8') as file:
+            for line in file:
+                line = tuple(line.replace('\r', '').replace('\n', '').replace('\t', '').split(','))
+                subgraph_edge_list.append(line)
 
-    print('subgraph_edge_list',subgraph_node_list)
-    with open('subgraph_edge.txt', 'w', encoding='utf-8') as file:
-        for item in range(len(subgraph_node_list)):
-            print('item',item)
-            for k in range(item+1, len(subgraph_node_list)):
-                print('k',k)
-                file.writelines(str(subgraph_node_list[item])+','+str(subgraph_node_list[k])+'\n')
+        # 处理子图距离 计算所有边的距离，放入 distance 集合，用于network的标签
+        subgraph_distance = []   #距离集合
+        for item in range(len(subgraph_edge_list)):
+            s = pow(pow(x_list[int(subgraph_edge_list[item][0])]-x_list[int(subgraph_edge_list[item][1])],2)+pow(y_list[int(subgraph_edge_list[item][0])]-y_list[int(subgraph_edge_list[item][1])],2),0.5)
+            s = round(s, 2)
+            subgraph_distance.append(s)
 
-    subgraph_edge_list = []
+        subgraph_weight_node_edge_from = set()
+        for item in range(len(subgraph_edge_list)):
+            subgraph_weight_node_edge_from.add((str(subgraph_edge_list[item][0]),str(subgraph_edge_list[item][1]),subgraph_distance[item]))
 
-    with open('subgraph_edge.txt', 'r', encoding='utf-8') as file:
-        for line in file:
-            line = tuple(line.replace('\r', '').replace('\n', '').replace('\t', '').split(','))
-            subgraph_edge_list.append(line)
+        # 创建子图
+        G1.add_weighted_edges_from(subgraph_weight_node_edge_from)
 
-    # 处理子图距离 计算所有边的距离，放入 distance 集合，用于network的标签
-    subgraph_distance = []   #距离集合
-    for item in range(len(subgraph_edge_list)):
-        s = pow(pow(x_list[int(subgraph_edge_list[item][0])]-x_list[int(subgraph_edge_list[item][1])],2)+pow(y_list[int(subgraph_edge_list[item][0])]-y_list[int(subgraph_edge_list[item][1])],2),0.5)
-        s = round(s, 2)
-        subgraph_distance.append(s)
+        # 用sa计算最短路径
+        cycle = approx.simulated_annealing_tsp(G1, "greedy", source=str(center_item))
+        cost = sum(G1[n][nbr]["weight"] for n, nbr in nx.utils.pairwise(cycle))
+        sum_tsp.append(cost)
+        print('cycle',cycle)
+        print('cost',cost)
 
-    subgraph_weight_node_edge_from = set()
-    for item in range(len(subgraph_edge_list)):
-        subgraph_weight_node_edge_from.add((str(subgraph_edge_list[item][0]),str(subgraph_edge_list[item][1]),subgraph_distance[item]))
-
-    # for item in subgraph_node_list:
-    #     G1.add_node(item, desc=str(item))
-    #
-    # # 子图G1加入 边 标签
-    # for item in range(len(subgraph_edge_list)):
-    #     print('11112222',subgraph_edge_list[item][0])
-    #     G1.add_edge(int(subgraph_edge_list[item][0]), int(subgraph_edge_list[item][1]), name=subgraph_distance[item])
-
-    G1.add_weighted_edges_from(subgraph_weight_node_edge_from)
-
-    cycle = approx.simulated_annealing_tsp(G1, "greedy", source='1')
-    cost = sum(G1[n][nbr]["weight"] for n, nbr in nx.utils.pairwise(cycle))
-    print('cycle',cycle)
-    print('cost',cost)
-
+    print('sum_tsp',sum_tsp)
 # 执行
 generation()
