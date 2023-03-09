@@ -2,8 +2,9 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import csv
 from networkx.algorithms import approximation as approx
+import numpy as np
 
-def generation():
+def generation(x):
     G = nx.Graph()
 
     # 从csv文件中读取节点id，类别，坐标
@@ -46,19 +47,18 @@ def generation():
             center_list.append(id_list[item + count])
             id_list.remove(id_list[item + count])
             count -= 1
-        print(id_list, center_list)
 
     # 种群
-    a = [[0, 1, 0, 1, 0, 1, 0, 1],[1, 0, 1, 0, 1, 0, 1, 0]]
+    a = np.zeros((2, 8))
+    for i in range(len(x)):
+        a[int(x[i]), i] = 1
+    # a = [[0, 1, 0, 1, 0, 1, 0, 1],[1, 0, 1, 0, 1, 0, 1, 0]]
     b = []
     c = []
     num = 0
     for item in a:
-        print('000',item)
         for id_count in range(len(item)):
-            print('111',item[id_count])
             if item[id_count] == 1:
-                print('222',id_count)
                 b.append(id_list[id_count])
         b.append(center_list[num])
         c.append(b)
@@ -82,7 +82,6 @@ def generation():
         for line in file:
             line = tuple(line.replace('\r', '').replace('\n', '').replace('\t', '').split(','))
             edge.append(line)
-    print('edge',edge)
 
     # 处理距离 计算所有边的距离，放入 distance 集合，用于network的标签
     distance = []   #距离集合
@@ -150,8 +149,7 @@ def generation():
         cycle = approx.simulated_annealing_tsp(G1, "greedy", source=str(center_item))
         cost = sum(G1[n][nbr]["weight"] for n, nbr in nx.utils.pairwise(cycle))
         res_tsp.append(cost)
-        print('cycle',cycle)
-        print('cost',cost)
     print('res_tsp',res_tsp)
-# 执行
-generation()
+    return sum(res_tsp)
+# # 执行
+# generation()
