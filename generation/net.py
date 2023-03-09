@@ -52,7 +52,7 @@ def generation(x):
     a = np.zeros((2, 8))
     for i in range(len(x)):
         a[int(x[i]), i] = 1
-    # a = [[0, 1, 0, 1, 0, 1, 0, 1],[1, 0, 1, 0, 1, 0, 1, 0]]
+    # a = [[0, 0, 0, 0, 0, 0, 0, 0],[1, 1, 1, 1, 1, 1, 1, 1]]
     b = []
     c = []
     num = 0
@@ -94,18 +94,18 @@ def generation(x):
     for item in range(len(edge)):
         G.add_edge(int(edge[item][0]), int(edge[item][1]), name=distance[item])
 
-    #画图
-    pos = coor_list
-    # 按pos所定位置画出节点,无标签无权值
-    nx.draw_networkx(G, pos, with_labels=None)
-    # 画出标签
-    node_labels = nx.get_node_attributes(G, 'desc')
-    nx.draw_networkx_labels(G, pos, labels=node_labels)
-    # 画出边权值
-    edge_labels = nx.get_edge_attributes(G, 'name')
-    nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
-    plt.title('Net', fontsize=10)
-    plt.show()
+    # # 画图
+    # pos = coor_list
+    # # 按pos所定位置画出节点,无标签无权值
+    # nx.draw_networkx(G, pos, with_labels=None)
+    # # 画出标签
+    # node_labels = nx.get_node_attributes(G, 'desc')
+    # nx.draw_networkx_labels(G, pos, labels=node_labels)
+    # # 画出边权值
+    # edge_labels = nx.get_edge_attributes(G, 'name')
+    # nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
+    # plt.title('Net', fontsize=10)
+    # plt.show()
 
     # 计算所有子图的最短路径
     res_tsp = []    # 目标函数 sum(res_tsp)
@@ -115,7 +115,7 @@ def generation(x):
         edlist = G.edges(center_item)
         subgraph_node_list = []
         subgraph_node_list.append(center_item)
-        print('subgraph_node_list',subgraph_node_list)
+        # print('subgraph_node_list',subgraph_node_list)
         for item, spot in edlist:
             subgraph_node_list.append(spot)
 
@@ -146,10 +146,14 @@ def generation(x):
         G1.add_weighted_edges_from(subgraph_weight_node_edge_from)
 
         # 用sa计算最短路径
-        cycle = approx.simulated_annealing_tsp(G1, "greedy", source=str(center_item))
-        cost = sum(G1[n][nbr]["weight"] for n, nbr in nx.utils.pairwise(cycle))
+        if len(edlist) == 0:
+            cost = 0
+        else:
+            cycle = approx.simulated_annealing_tsp(G1, "greedy", source=str(center_item))
+            cost = sum(G1[n][nbr]["weight"] for n, nbr in nx.utils.pairwise(cycle))
         res_tsp.append(cost)
     print('res_tsp',res_tsp)
+    print('sum_cost', sum(res_tsp))
     return sum(res_tsp)
 # # 执行
 # generation()
