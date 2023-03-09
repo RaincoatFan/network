@@ -147,12 +147,12 @@ def generation():
         G1.add_weighted_edges_from(subgraph_weight_node_edge_from)
 
         # 用sa计算最短路径
+        res_tsp = []    # 目标函数 sum(res_tsp)
         cycle = approx.simulated_annealing_tsp(G1, "greedy", source=str(center_item))
         cost = sum(G1[n][nbr]["weight"] for n, nbr in nx.utils.pairwise(cycle))
-        sum_tsp.append(cost)
+        res_tsp.append(cost)
         print('cycle',cycle)
         print('cost',cost)
-
-    print('sum_tsp',sum_tsp)
+    print('sum_tsp',res_tsp)
 # 执行
 generation()
