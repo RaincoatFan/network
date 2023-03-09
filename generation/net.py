@@ -109,7 +109,7 @@ def generation():
     plt.show()
 
     # 计算所有子图的最短路径
-    sum_tsp = []
+    res_tsp = []    # 目标函数 sum(res_tsp)
     for center_item in center_list:
         # 提取子图，并计算子图 tsp-sa 花销
         G1 = nx.Graph()
@@ -147,12 +147,11 @@ def generation():
         G1.add_weighted_edges_from(subgraph_weight_node_edge_from)
 
         # 用sa计算最短路径
-        res_tsp = []    # 目标函数 sum(res_tsp)
         cycle = approx.simulated_annealing_tsp(G1, "greedy", source=str(center_item))
         cost = sum(G1[n][nbr]["weight"] for n, nbr in nx.utils.pairwise(cycle))
         res_tsp.append(cost)
         print('cycle',cycle)
         print('cost',cost)
-    print('sum_tsp',res_tsp)
+    print('res_tsp',res_tsp)
 # 执行
 generation()
