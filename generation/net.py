@@ -133,7 +133,6 @@ def generation():
         for line in file:
             line = tuple(line.replace('\r', '').replace('\n', '').replace('\t', '').split(','))
             subgraph_edge_list.append(line)
-    print('edge',subgraph_edge_list)
 
     # 处理子图距离 计算所有边的距离，放入 distance 集合，用于network的标签
     subgraph_distance = []   #距离集合
@@ -141,26 +140,25 @@ def generation():
         s = pow(pow(x_list[int(subgraph_edge_list[item][0])]-x_list[int(subgraph_edge_list[item][1])],2)+pow(y_list[int(subgraph_edge_list[item][0])]-y_list[int(subgraph_edge_list[item][1])],2),0.5)
         s = round(s, 2)
         subgraph_distance.append(s)
-    print('bbbbbbbbbbbbbbb',subgraph_distance)
 
-    for item in subgraph_node_list:
-        G1.add_node(item, desc=str(item))
-
-    # 子图G1加入 边 标签
+    subgraph_weight_node_edge_from = set()
     for item in range(len(subgraph_edge_list)):
-        G1.add_edge(int(subgraph_edge_list[item][0]), int(subgraph_edge_list[item][1]), name=subgraph_distance[item])
+        subgraph_weight_node_edge_from.add((str(subgraph_edge_list[item][0]),str(subgraph_edge_list[item][1]),subgraph_distance[item]))
 
-    # print('0节点到4节点最短路径: ', nx.shortest_path(G1, source=1, target=9))
+    # for item in subgraph_node_list:
+    #     G1.add_node(item, desc=str(item))
     #
-    # SA_tsp = nx.approximation.simulated_annealing_tsp
-    # method = lambda G1, wt: SA_tsp(G1, 'greedy', weight=wt, temp=500)
-    # res = SA_tsp(G1, method=method)
-    # print('tsp',res)
+    # # 子图G1加入 边 标签
+    # for item in range(len(subgraph_edge_list)):
+    #     print('11112222',subgraph_edge_list[item][0])
+    #     G1.add_edge(int(subgraph_edge_list[item][0]), int(subgraph_edge_list[item][1]), name=subgraph_distance[item])
 
-    cycle = approx.simulated_annealing_tsp(G1, "greedy", source=2)
-    # cost = sum(G1[n][nbr]["weight"] for n, nbr in nx.utils.pairwise(cycle))
+    G1.add_weighted_edges_from(subgraph_weight_node_edge_from)
+
+    cycle = approx.simulated_annealing_tsp(G1, "greedy", source='1')
+    cost = sum(G1[n][nbr]["weight"] for n, nbr in nx.utils.pairwise(cycle))
     print('cycle',cycle)
-    # incycle = approx.simulated_annealing_tsp(G, cycle, source=2)
-    # print('incycle', incycle)
+    print('cost',cost)
+
 # 执行
 generation()

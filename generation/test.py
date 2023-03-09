@@ -19,6 +19,8 @@ print('cost',cost)
 incycle = ["D", "B", "A", "C", "D"]
 cycle = approx.simulated_annealing_tsp(G, incycle, source="D")
 cost = sum(G[n][nbr]["weight"] for n, nbr in nx.utils.pairwise(cycle))
+print('cycle',cycle)
+print('cost',cost)
 # cycle
 # ['D', 'C', 'B', 'A', 'D']
 # cost
