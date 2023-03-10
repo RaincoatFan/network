@@ -37,7 +37,6 @@ def initializationSineBack(npop,dim,ub,lb,fun_index):
     pop_fit = np.zeros(2 * npop)
     for i in range(2 * npop):
         pop_fit[i] = ben_functions(pop_pos[i, :], fun_index)
-        # print('11111111111111111111111', pop_pos[i, :])
     index = np.argsort(pop_fit)
     pop_pos = pop_pos[index[:npop]]
     return pop_pos
@@ -176,7 +175,7 @@ def main():
     # fun_index = 5: Branin
     # fun_index = 6: Penalized
     fun_index = 1
-    max_it = 100
+    max_it = 20
     npop = 10
     best_x, best_f, his_best_fit = AHA(fun_index, max_it, npop)
     if best_f > 0:

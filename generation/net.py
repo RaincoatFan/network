@@ -52,6 +52,18 @@ def generation(x):
     a = np.zeros((2, 8))
     for i in range(len(x)):
         a[int(x[i]), i] = 1
+
+    row_count = 0
+    for row in center_list:
+        for column in id_list:
+            s = pow(pow(x_list[row] - x_list[column], 2) + pow(y_list[row] - y_list[column], 2), 0.5)
+            s = round(s, 2)
+            if s <= 5:
+                a[:, id_list.index(column)] = 0
+                a[row_count][id_list.index(column)] = 1
+        row_count += 1
+
+
     # a = [[0, 0, 0, 0, 0, 0, 0, 0],[1, 1, 1, 1, 1, 1, 1, 1]]
     b = []
     c = []
@@ -64,6 +76,7 @@ def generation(x):
         c.append(b)
         b = []
         num += 1
+    print('aaaaaaaaaaaaa',a)
 
     # 处理边（1）所有属于一个配送中心的点之间都有边
     # 先放入 edge.txt 中
@@ -156,4 +169,4 @@ def generation(x):
     print('sum_cost', sum(res_tsp))
     return sum(res_tsp)
 # # 执行
-# generation()
+# generation([0, 0, 0, 0, 1, 0, 0, 1])
