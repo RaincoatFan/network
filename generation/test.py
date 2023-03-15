@@ -1,4 +1,7 @@
+from haversine import haversine
 
+a = haversine((30.384303,-97.964343),(30.361568,-97.987454))
+print(a)
 # import networkx as nx
 # from networkx.algorithms import approximation as approx
 #

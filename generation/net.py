@@ -3,16 +3,18 @@ import matplotlib.pyplot as plt
 import csv
 from networkx.algorithms import approximation as approx
 import numpy as np
+from haversine import haversine
 
 def generation(x):
     G = nx.Graph()
-
+    # print('xxx',x)
     # 从csv文件中读取节点id，类别，坐标
     id_tag = []
     sort_tag = []
     x_tag = []
     y_tag = []
-    with open('stops.csv', encoding='utf-8') as f:
+    #改
+    with open('../datahandle/stops_with_center_3.csv', encoding='utf-8') as f:
         for row in csv.reader(f, skipinitialspace=True):
             id_tag.append(row[0])
             sort_tag.append(row[1])
@@ -26,9 +28,9 @@ def generation(x):
     for item in id_tag:
         id_list.append(int(item))
     for item in x_tag:
-        x_list.append(int(item))
+        x_list.append(float(item))
     for item in y_tag:
-        y_list.append(int(item))
+        y_list.append(float(item))
 
     coor_list = []  #将x,y组合成坐标
     for item in range(len(x_list)):
@@ -48,15 +50,26 @@ def generation(x):
             id_list.remove(id_list[item + count])
             count -= 1
 
+    #   0313
+    count_id_list = len(id_list)
+    count_center_list = len(center_list)
+    print('count_id_list',count_id_list)
+    print('count_center_list',count_center_list)
+
     # 种群
-    a = np.zeros((2, 8))
+    # 改
+    a = np.zeros((8, 492))
     for i in range(len(x)):
         a[int(x[i]), i] = 1
+    print('a',a)
 
+    # 设置可达距离 ****************************************
     row_count = 0
     for row in center_list:
         for column in id_list:
-            s = pow(pow(x_list[row] - x_list[column], 2) + pow(y_list[row] - y_list[column], 2), 0.5)
+            # 改
+            s = haversine((y_list[row],x_list[row]),(y_list[column],x_list[column]))
+            # s = pow(pow(x_list[row] - x_list[column], 2) + pow(y_list[row] - y_list[column], 2), 0.5)
             s = round(s, 2)
             if s <= 5:
                 a[:, id_list.index(column)] = 0
@@ -76,7 +89,6 @@ def generation(x):
         c.append(b)
         b = []
         num += 1
-    print('aaaaaaaaaaaaa',a)
 
     # 处理边（1）所有属于一个配送中心的点之间都有边
     # 先放入 edge.txt 中
@@ -99,7 +111,9 @@ def generation(x):
     # 处理距离 计算所有边的距离，放入 distance 集合，用于network的标签
     distance = []   #距离集合
     for item in range(len(edge)):
-        s = pow(pow(x_list[int(edge[item][0])]-x_list[int(edge[item][1])],2)+pow(y_list[int(edge[item][0])]-y_list[int(edge[item][1])],2),0.5)
+        # 改
+        s = haversine((y_list[int(edge[item][0])], x_list[int(edge[item][0])]), (y_list[int(edge[item][1])], x_list[int(edge[item][1])]))
+        # s = pow(pow(x_list[int(edge[item][0])]-x_list[int(edge[item][1])],2)+pow(y_list[int(edge[item][0])]-y_list[int(edge[item][1])],2),0.5)
         s = round(s, 2)
         distance.append(s)
 
@@ -167,6 +181,9 @@ def generation(x):
         res_tsp.append(cost)
     print('res_tsp',res_tsp)
     print('sum_cost', sum(res_tsp))
-    return sum(res_tsp)
 # # 执行
-# generation([0, 0, 0, 0, 1, 0, 0, 1])
+# generation(np.random.randint(0, 2, 492))
+
+# def init():
+#     myarray = np.random.randint(0, 2, 3958)
+#     return myarray

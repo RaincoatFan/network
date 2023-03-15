@@ -1,5 +1,6 @@
 import csv
 import random
+import pandas as pd
 
 def handle_center():
     r = csv.reader(open('stops_demo_2.csv'))
@@ -14,12 +15,8 @@ def handle_center():
     writer.writerows(lines)
 
     # 处理空行
-    with open('stops_with_center_3.csv', 'rt') as f:
-        lines = ''
-        for line in f:
-            if line != '\n':
-                lines += line
-    with open('stops_with_center_3.csv', 'wt') as d:
-        d.write(lines)
+    data = pd.read_csv("stops_with_center_3.csv")
+    res = data.dropna(how="all")
+    res.to_csv("stops_with_center_3.csv", index=False)
 
 handle_center()

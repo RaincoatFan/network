@@ -36,6 +36,7 @@ def initializationSineBack(npop,dim,ub,lb,fun_index):
             pop_pos[npop + i, j] = math.floor(ub[j] + lb[j] - pop_pos[i, j])
     pop_fit = np.zeros(2 * npop)
     for i in range(2 * npop):
+        print('初始',i)
         pop_fit[i] = ben_functions(pop_pos[i, :], fun_index)
     index = np.argsort(pop_fit)
     pop_pos = pop_pos[index[:npop]]
@@ -52,7 +53,8 @@ def levy(dim):
     return o
 
 def AHA(fun_index, max_it, npop):
-    lb, ub, dim = [0],[1.9],8
+    # 改
+    lb, ub, dim = [0],[7.9],492
     if len(lb) == 1:
         lb = lb * dim
         ub = ub * dim
