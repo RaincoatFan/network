@@ -9,7 +9,7 @@ def handle_center():
 
     for item in range(len(lines)):
         number = random.random()
-        if number <= 0.01:  #一个配送中心服务约100个点
+        if number <= 0.02:  #一个配送中心服务约100个点
             lines[item+1][1] = '1'
     writer = csv.writer(open('stops_with_center_3.csv', 'w'))
     writer.writerows(lines)
