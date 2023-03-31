@@ -177,8 +177,8 @@ def main():
     # fun_index = 5: Branin
     # fun_index = 6: Penalized
     fun_index = 1
-    max_it = 20
-    npop = 10
+    max_it = 50
+    npop = 20
     best_x, best_f, his_best_fit = AHA(fun_index, max_it, npop)
     if best_f > 0:
         yscale('log')
