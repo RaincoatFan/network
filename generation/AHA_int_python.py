@@ -11,6 +11,8 @@ from torch import randperm
 from matplotlib.pyplot import *
 from pylab import *
 from net import generation
+import os
+os.environ['KMP_DUPLICATE_LIB_OK']='TRUE'
 
 def ben_functions(x, function_index):
     # Sphere
@@ -54,7 +56,7 @@ def levy(dim):
 
 def AHA(fun_index, max_it, npop):
     # 改
-    lb, ub, dim = [0],[88.9],4611
+    lb, ub, dim = [0],[42.9],1957
     if len(lb) == 1:
         lb = lb * dim
         ub = ub * dim

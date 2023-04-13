@@ -59,7 +59,7 @@ def generation(x):
 
     # 种群
     # 改
-    a = np.zeros((89, 4611))
+    a = np.zeros((43, 1957))
     for i in range(len(x)):
         a[int(x[i]), i] = 1
     print('a',a)
@@ -73,7 +73,7 @@ def generation(x):
             # s = pow(pow(x_list[row] - x_list[column], 2) + pow(y_list[row] - y_list[column], 2), 0.5)
             # print("ssssssss",s)
             s = round(s, 2)
-            if s <= 2:
+            if s <= 0.25:
                 a[:, id_list.index(column)] = 0
                 a[row_count][id_list.index(column)] = 1
         row_count += 1
