@@ -27,5 +27,6 @@ for index, row in df.iterrows():
         # add the marker to the map
         marker.add_to(my_map)
 
+my_map.add_child(folium.LatLngPopup())
 # save the map to an HTML file
 my_map.save('my_map.html')

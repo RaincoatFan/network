@@ -72,8 +72,9 @@ def generation(x):
             s = haversine((y_list[row],x_list[row]),(y_list[column],x_list[column]))
             # s = pow(pow(x_list[row] - x_list[column], 2) + pow(y_list[row] - y_list[column], 2), 0.5)
             # print("ssssssss",s)
-            s = round(s, 2)
-            if s <= 0.25:
+            # s = round(s, 2)
+            # print('s',s)
+            if s <= 3:
                 a[:, id_list.index(column)] = 0
                 a[row_count][id_list.index(column)] = 1
         row_count += 1
@@ -116,7 +117,7 @@ def generation(x):
         # 改
         s = haversine((y_list[int(edge[item][0])], x_list[int(edge[item][0])]), (y_list[int(edge[item][1])], x_list[int(edge[item][1])]))
         # s = pow(pow(x_list[int(edge[item][0])]-x_list[int(edge[item][1])],2)+pow(y_list[int(edge[item][0])]-y_list[int(edge[item][1])],2),0.5)
-        s = round(s, 2)
+        # s = round(s, 2)
         distance.append(s)
 
     # G加入 边 标签
@@ -182,9 +183,12 @@ def generation(x):
             cycle = approx.simulated_annealing_tsp(G1, "greedy", source=str(center_item))
             cost = sum(G1[n][nbr]["weight"] for n, nbr in nx.utils.pairwise(cycle))
         res_tsp.append(cost)
+    variance = np.var(res_tsp)
+    print('cost数组',res_tsp)
+    print('方差',variance)
     print('res_tsp',res_tsp)
     print('sum_cost', sum(res_tsp))
-    return  sum(res_tsp)
+    return sum(res_tsp)
 # 执行
 # generation(np.random.randint(0, 2, 492))
 

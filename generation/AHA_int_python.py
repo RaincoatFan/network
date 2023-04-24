@@ -190,7 +190,7 @@ def main():
     xlim([0, max_it + 1])
     xlabel('Iterations')
     ylabel('Fitness')
-    title('F' + str(fun_index))
+    title('Dynamic Partitioning Model')
     show()
     print('The best solution is: ', best_x)
     print('The fitness is: ', best_f)
