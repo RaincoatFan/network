@@ -12,10 +12,10 @@ Lon = []
 Lat = []
 
 # 仓库经纬度（格式：经度,纬度）
-warehouse_location = '113.549090,22.198951'
+warehouse_location = '113.296467,22.209200'
 
 # 农田经纬度（格式：经度,纬度）,换成自己的
-farm_location = '113.547,22.19199'
+farm_location = '113.294467,22.207200'
 
 # 路径规划策略，可以选择0~5的整数，具体含义可以参考高德API文档 具体介绍见：https://lbs.amap.com/api/webservice/guide/api/direction
 # 本文用的是驾车路径，
@@ -51,11 +51,13 @@ def get_route(start, end, mode, amap_key):
 
 
 route = get_route(warehouse_location, farm_location, strategy, amap_key)
-
+sum = 0
 if route:
     for i, step in enumerate(route):
         list_latlon.append(step["polyline"])
-        print(f'步骤 {i+1}: {step["instruction"]}:{step["polyline"]}')
+        sum = sum + float(step["distance"])
+        print(f'步骤 {i+1}: {step["instruction"]}:{step["polyline"]}-{step["distance"]}')
+
 
 else:
     print('无法获取路线规划。')
@@ -72,15 +74,15 @@ for item in list_latlon:
 # 绘制地图
 def PlotLineOnMap(Lat, Lon):
     # 给出的坐标系为GCJ-02，如果需要测试google地图，需要进行坐标转换
-
     tri = np.array(list(zip(Lat, Lon)))
 
     san_map = folium.Map(
-        location=[23.243466, 113.637713],
+        location=[22.209200, 113.296467],
         zoom_start=16,
         # 高德街道图
-        # tiles='http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={x}&y={y}&z={z}',
-        tiles='http://webst02.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}', # 高德卫星图
+        tiles='http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={x}&y={y}&z={z}',
+        # 高德卫星图
+        # tiles='http://webst02.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',
         attr='default')
 
     folium.PolyLine(tri, color='#3388ff').add_to(san_map)
@@ -92,6 +94,7 @@ def PlotLineOnMap(Lat, Lon):
 def main():
 
     PlotLineOnMap(Lat, Lon)
+    return sum
 
 if __name__ == '__main__':
     main()

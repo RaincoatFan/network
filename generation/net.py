@@ -4,6 +4,7 @@ import csv
 from networkx.algorithms import approximation as approx
 import numpy as np
 from haversine import haversine
+from gdmap.distance import main
 
 def generation(x):
     G = nx.Graph()
@@ -116,6 +117,8 @@ def generation(x):
     for item in range(len(edge)):
         # 改
         s = haversine((y_list[int(edge[item][0])], x_list[int(edge[item][0])]), (y_list[int(edge[item][1])], x_list[int(edge[item][1])]))
+        # s = main()
+        # print('sssssss',s)
         # s = pow(pow(x_list[int(edge[item][0])]-x_list[int(edge[item][1])],2)+pow(y_list[int(edge[item][0])]-y_list[int(edge[item][1])],2),0.5)
         # s = round(s, 2)
         distance.append(s)
