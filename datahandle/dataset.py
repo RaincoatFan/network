@@ -1,58 +1,59 @@
-import csv
+import math
 import random
-from math import radians, cos, sin, asin, sqrt
+import csv
 
-# 定义经纬度矩形范围
-MIN_LAT, MAX_LAT = radians(30.0), radians(31.0)
-MIN_LON, MAX_LON = radians(118.0), radians(119.0)
+# 地球半径，单位：米
+EARTH_RADIUS = 6371000
 
-# 定义中心点个数和最小距离
-NUM_CENTERS = 43
-MIN_DISTANCE = 2000.0
+# 某经纬度范围
+LATITUDE_RANGE = (30, 30.02)
+LONGITUDE_RANGE = (120, 120.02)
 
-# 计算两个经纬度坐标之间的距离
-def haversine(lon1, lat1, lon2, lat2):
-    """
-    Calculate the great circle distance between two points
-    on the earth (specified in decimal degrees)
-    """
-    # convert decimal degrees to radians
-    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+# 中心点个数和最小距离
+CENTER_COUNT = 15
+MIN_DISTANCE = 500
 
-    # haversine formula
-    dlon = lon2 - lon1
-    dlat = lat2 - lat1
-    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
-    c = 2 * asin(sqrt(a))
-    r = 6371 # Radius of earth in kilometers. Use 3956 for miles
-    return c * r * 1000
+# 生成点的数量
+POINT_COUNT = 500
 
-# 判断两个经纬度坐标之间的距离是否大于最小距离
-def is_far_enough(center, centers):
-    for c in centers:
-        if haversine(center[0], center[1], c[0], c[1]) < MIN_DISTANCE:
+# 计算两点之间的距离（单位：米）
+def calc_distance(lat1, lon1, lat2, lon2):
+    rad_lat1 = math.radians(lat1)
+    rad_lat2 = math.radians(lat2)
+    a = rad_lat1 - rad_lat2
+    b = math.radians(lon1) - math.radians(lon2)
+    s = 2 * math.asin(math.sqrt(math.pow(math.sin(a/2), 2) + math.cos(rad_lat1) * math.cos(rad_lat2) * math.pow(math.sin(b/2), 2)))
+    s *= EARTH_RADIUS
+    return s
+
+# 生成随机点，返回经度和纬度
+def generate_random_point():
+    return (random.uniform(*LATITUDE_RANGE), random.uniform(*LONGITUDE_RANGE))
+
+# 判断两点之间的距离是否小于最小距离
+def is_distance_valid(center_points, new_point):
+    for point in center_points:
+        if calc_distance(*point, *new_point) < MIN_DISTANCE:
             return False
     return True
 
-# 生成中心点坐标
-centers = []
-while len(centers) < NUM_CENTERS:
-    center = [random.uniform(MIN_LON, MAX_LON), random.uniform(MIN_LAT, MAX_LAT)]
-    if is_far_enough(center, centers):
-        centers.append(center)
+# 生成中心点
+center_points = []
+while len(center_points) < CENTER_COUNT:
+    new_center = generate_random_point()
+    if is_distance_valid(center_points, new_center):
+        center_points.append(new_center)
 
-# 生成随机点坐标并标注中心点
-points = []
-for i in range(2000):
-    lon, lat = random.uniform(MIN_LON, MAX_LON), random.uniform(MIN_LAT, MAX_LAT)
-    if [lon, lat] in centers:
-        points.append([lon, lat, 1])
-    else:
-        points.append([lon, lat, 0])
-
-# 写入csv文件
-with open('points.csv', mode='w', newline='') as file:
-    writer = csv.writer(file)
-    writer.writerow(['lon', 'lat', 'center'])
-    for point in points:
-        writer.writerow(point)
+# 生成点并保存到csv文件
+with open('points.csv', 'w', newline='') as f:
+    writer = csv.writer(f)
+    writer.writerow(['id', 'center', 'x', 'y'])
+    for i in range(POINT_COUNT):
+        is_center = 1 if i < CENTER_COUNT else 0
+        if is_center:
+            point = center_points.pop()
+        else:
+            point = generate_random_point()
+            while not is_distance_valid(center_points, point):
+                point = generate_random_point()
+        writer.writerow([i, is_center, *point])

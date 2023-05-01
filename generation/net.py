@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import csv
 from networkx.algorithms import approximation as approx
 import numpy as np
-from haversine import haversine
+# from haversine import haversine
 from gdmap.distance import main
 
 def generation(x):
@@ -15,8 +15,7 @@ def generation(x):
     x_tag = []
     y_tag = []
     #改
-    with open('../datahandle/stops_with_center_3.csv', encoding='utf-8') as f:
-    # with open('stops.csv', encoding='utf-8') as f:
+    with open('../datahandle/points.csv', encoding='utf-8') as f:
         for row in csv.reader(f, skipinitialspace=True):
             id_tag.append(row[0])
             sort_tag.append(row[1])
@@ -60,7 +59,7 @@ def generation(x):
 
     # 种群
     # 改
-    a = np.zeros((43, 1957))
+    a = np.zeros((15, 485))
     for i in range(len(x)):
         a[int(x[i]), i] = 1
     print('a',a)
@@ -70,12 +69,12 @@ def generation(x):
     for row in center_list:
         for column in id_list:
             # 改 haversine单位km
-            s = haversine((y_list[row],x_list[row]),(y_list[column],x_list[column]))
-            # s = pow(pow(x_list[row] - x_list[column], 2) + pow(y_list[row] - y_list[column], 2), 0.5)
-            # print("ssssssss",s)
-            # s = round(s, 2)
-            # print('s',s)
-            if s <= 3:
+            # s = haversine((y_list[row],x_list[row]),(y_list[column],x_list[column]))
+            warehouse_location = '{},{}'.format(y_list[row], x_list[row])
+            farm_location = '{},{}'.format(y_list[column], x_list[column])
+            # print(warehouse_location,farm_location)
+            s = main(warehouse_location, farm_location)
+            if s <= 800:
                 a[:, id_list.index(column)] = 0
                 a[row_count][id_list.index(column)] = 1
         row_count += 1
@@ -116,8 +115,9 @@ def generation(x):
     distance = []   #距离集合
     for item in range(len(edge)):
         # 改
-        s = haversine((y_list[int(edge[item][0])], x_list[int(edge[item][0])]), (y_list[int(edge[item][1])], x_list[int(edge[item][1])]))
-        # s = main()
+        warehouse_location = '{},{}'.format(y_list[int(edge[item][0])],x_list[int(edge[item][0])])
+        farm_location = '{},{}'.format(y_list[int(edge[item][1])], x_list[int(edge[item][1])])
+        s = main(warehouse_location,farm_location)
         # print('sssssss',s)
         # s = pow(pow(x_list[int(edge[item][0])]-x_list[int(edge[item][1])],2)+pow(y_list[int(edge[item][0])]-y_list[int(edge[item][1])],2),0.5)
         # s = round(s, 2)
@@ -167,9 +167,11 @@ def generation(x):
         # 处理子图距离 计算所有边的距离，放入 distance 集合，用于network的标签
         subgraph_distance = []   #距离集合
         for item in range(len(subgraph_edge_list)):
-            s = haversine((y_list[int(subgraph_edge_list[item][0])], x_list[int(subgraph_edge_list[item][0])]), (y_list[int(subgraph_edge_list[item][1])], x_list[int(subgraph_edge_list[item][1])]))
-            # s = pow(pow(x_list[int(subgraph_edge_list[item][0])]-x_list[int(subgraph_edge_list[item][1])],2)+pow(y_list[int(subgraph_edge_list[item][0])]-y_list[int(subgraph_edge_list[item][1])],2),0.5)
-            s = round(s, 2)
+            # s = haversine((y_list[int(subgraph_edge_list[item][0])], x_list[int(subgraph_edge_list[item][0])]), (y_list[int(subgraph_edge_list[item][1])], x_list[int(subgraph_edge_list[item][1])]))
+            warehouse_location = '{},{}'.format(y_list[int(subgraph_edge_list[item][0])], x_list[int(subgraph_edge_list[item][0])])
+            farm_location = '{},{}'.format(y_list[int(subgraph_edge_list[item][1])], x_list[int(subgraph_edge_list[item][1])])
+            s = main(warehouse_location, farm_location)
+            # s = round(s, 2)
             subgraph_distance.append(s)
 
         subgraph_weight_node_edge_from = set()

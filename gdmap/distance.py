@@ -11,11 +11,11 @@ list_latlon=[]
 Lon = []
 Lat = []
 
-# 仓库经纬度（格式：经度,纬度）
-warehouse_location = '113.296467,22.209200'
-
-# 农田经纬度（格式：经度,纬度）,换成自己的
-farm_location = '113.294467,22.207200'
+# # 仓库经纬度（格式：经度,纬度）
+# warehouse_location = '113.296467,22.209200'
+#
+# # 农田经纬度（格式：经度,纬度）,换成自己的
+# farm_location = '113.294467,22.207200'
 
 # 路径规划策略，可以选择0~5的整数，具体含义可以参考高德API文档 具体介绍见：https://lbs.amap.com/api/webservice/guide/api/direction
 # 本文用的是驾车路径，
@@ -49,28 +49,6 @@ def get_route(start, end, mode, amap_key):
         print('请求失败，请检查输入参数。')
         return None
 
-
-route = get_route(warehouse_location, farm_location, strategy, amap_key)
-sum = 0
-if route:
-    for i, step in enumerate(route):
-        list_latlon.append(step["polyline"])
-        sum = sum + float(step["distance"])
-        print(f'步骤 {i+1}: {step["instruction"]}:{step["polyline"]}-{step["distance"]}')
-
-
-else:
-    print('无法获取路线规划。')
-
-# 获取街道地图
-for item in list_latlon:
-    points = item.split(';')
-    for point in points:
-        coords = point.split(',')
-        Lon.append(float(coords[0]))
-        Lat.append(float(coords[1]))
-
-
 # 绘制地图
 def PlotLineOnMap(Lat, Lon):
     # 给出的坐标系为GCJ-02，如果需要测试google地图，需要进行坐标转换
@@ -91,9 +69,34 @@ def PlotLineOnMap(Lat, Lon):
         folium.Marker([lat, lon], color='red').add_to(marker_cluster)
     san_map.save('showpoint.html')
 
-def main():
+def main(warehouse_location,farm_location):
+    # # 仓库经纬度（格式：经度,纬度）
+    # warehouse_location = '113.296467,22.209200'
+    #
+    # # 农田经纬度（格式：经度,纬度）,换成自己的
+    # farm_location = '113.294467,22.207200'
 
-    PlotLineOnMap(Lat, Lon)
+    route = get_route(warehouse_location, farm_location, strategy, amap_key)
+    sum = 0
+    if route:
+        for i, step in enumerate(route):
+            list_latlon.append(step["polyline"])
+            sum = sum + float(step["distance"])
+            # print(f'步骤 {i + 1}: {step["instruction"]}:{step["polyline"]}-{step["distance"]}')
+    else:
+        print('无法获取路线规划。')
+
+    # 获取街道地图
+    # for item in list_latlon:
+    #     points = item.split(';')
+    #     for point in points:
+    #         coords = point.split(',')
+    #         Lon.append(float(coords[0]))
+    #         Lat.append(float(coords[1]))
+
+
+    # PlotLineOnMap(Lat, Lon)
+    print(sum)
     return sum
 
 if __name__ == '__main__':
