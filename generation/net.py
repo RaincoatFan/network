@@ -15,7 +15,7 @@ def generation(x):
     x_tag = []
     y_tag = []
     #改
-    with open('../datahandle/points.csv', encoding='utf-8') as f:
+    with open('../datahandle/real_data.csv', encoding='utf-8') as f:
         for row in csv.reader(f, skipinitialspace=True):
             id_tag.append(row[0])
             sort_tag.append(row[1])
@@ -59,24 +59,38 @@ def generation(x):
 
     # 种群
     # 改
-    a = np.zeros((15, 485))
+    a = np.zeros((2, 48))
     for i in range(len(x)):
         a[int(x[i]), i] = 1
     print('a',a)
 
+    # 实际路面距离csv处理
+    first = []
+    second = []
+    real_distance = []
+    with open('../datahandle/real_distance.csv', encoding='utf-8') as f:
+        for row in csv.reader(f, skipinitialspace=True):
+            first.append(row[0])
+            second.append(row[1])
+            real_distance.append(row[2])
+        del first[0], second[0], real_distance[0]
+    print('first',first)
+    print('second',second)
     # 设置可达距离 ****************************************
     row_count = 0
     for row in center_list:
         for column in id_list:
-            # 改 haversine单位km
+            for k in range(len(first)):
+                if int(first[k]) == row and int(second[k]) == column:
+                    # print('1111111111112222222222',row, column,int(first[k]),int(second[k]),k)
+                    s = float(real_distance[k])
             # s = haversine((y_list[row],x_list[row]),(y_list[column],x_list[column]))
-            warehouse_location = '{},{}'.format(y_list[row], x_list[row])
-            farm_location = '{},{}'.format(y_list[column], x_list[column])
-            # print(warehouse_location,farm_location)
-            s = main(warehouse_location, farm_location)
-            if s <= 800:
-                a[:, id_list.index(column)] = 0
-                a[row_count][id_list.index(column)] = 1
+            # warehouse_location = '{},{}'.format(y_list[row], x_list[row])
+            # farm_location = '{},{}'.format(y_list[column], x_list[column])
+            # s = main(warehouse_location, farm_location)
+                    if s <= 100:
+                        a[:, id_list.index(column)] = 0
+                        a[row_count][id_list.index(column)] = 1
         row_count += 1
 
 
@@ -114,10 +128,14 @@ def generation(x):
     # 处理距离 计算所有边的距离，放入 distance 集合，用于network的标签
     distance = []   #距离集合
     for item in range(len(edge)):
+        for k in range(len(first)):
+            if int(first[k]) == int(edge[item][0]) and int(second[k]) == int(edge[item][1]):
+                # print('1111111111112222222222',int(edge[item][0]), int(edge[item][1]),int(first[k]),int(second[k]),k,real_distance[k])
+                s = float(real_distance[k])
         # 改
-        warehouse_location = '{},{}'.format(y_list[int(edge[item][0])],x_list[int(edge[item][0])])
-        farm_location = '{},{}'.format(y_list[int(edge[item][1])], x_list[int(edge[item][1])])
-        s = main(warehouse_location,farm_location)
+        # warehouse_location = '{},{}'.format(y_list[int(edge[item][0])],x_list[int(edge[item][0])])
+        # farm_location = '{},{}'.format(y_list[int(edge[item][1])], x_list[int(edge[item][1])])
+        # s = main(warehouse_location,farm_location)
         # print('sssssss',s)
         # s = pow(pow(x_list[int(edge[item][0])]-x_list[int(edge[item][1])],2)+pow(y_list[int(edge[item][0])]-y_list[int(edge[item][1])],2),0.5)
         # s = round(s, 2)
@@ -166,13 +184,20 @@ def generation(x):
 
         # 处理子图距离 计算所有边的距离，放入 distance 集合，用于network的标签
         subgraph_distance = []   #距离集合
+        # print('subgraph_distance',subgraph_edge_list)
         for item in range(len(subgraph_edge_list)):
+            for k in range(len(first)):
+                # print('int(subgraph_edge_list[item][0])',int(subgraph_edge_list[item][0]))
+                # print('int(subgraph_edge_list[item][1])',int(subgraph_edge_list[item][1]))
+                if int(first[k]) == int(subgraph_edge_list[item][0]) and int(second[k]) == int(subgraph_edge_list[item][1]):
+                    s = float(real_distance[k])
+                    # print('distance[k]',real_distance[k])
             # s = haversine((y_list[int(subgraph_edge_list[item][0])], x_list[int(subgraph_edge_list[item][0])]), (y_list[int(subgraph_edge_list[item][1])], x_list[int(subgraph_edge_list[item][1])]))
-            warehouse_location = '{},{}'.format(y_list[int(subgraph_edge_list[item][0])], x_list[int(subgraph_edge_list[item][0])])
-            farm_location = '{},{}'.format(y_list[int(subgraph_edge_list[item][1])], x_list[int(subgraph_edge_list[item][1])])
-            s = main(warehouse_location, farm_location)
-            # s = round(s, 2)
+            # warehouse_location = '{},{}'.format(y_list[int(subgraph_edge_list[item][0])], x_list[int(subgraph_edge_list[item][0])])
+            # farm_location = '{},{}'.format(y_list[int(subgraph_edge_list[item][1])], x_list[int(subgraph_edge_list[item][1])])
+            # s = main(warehouse_location, farm_location)
             subgraph_distance.append(s)
+        print('sssssssssssssssssssssssssssssssssss', subgraph_distance)
 
         subgraph_weight_node_edge_from = set()
         for item in range(len(subgraph_edge_list)):

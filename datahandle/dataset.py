@@ -6,15 +6,15 @@ import csv
 EARTH_RADIUS = 6371000
 
 # 某经纬度范围
-LATITUDE_RANGE = (30, 30.02)
-LONGITUDE_RANGE = (120, 120.02)
+LATITUDE_RANGE = (22.230599, 22.233418)
+LONGITUDE_RANGE = (113.505499 , 113.511715)
 
 # 中心点个数和最小距离
-CENTER_COUNT = 15
-MIN_DISTANCE = 500
+CENTER_COUNT = 2
+MIN_DISTANCE = 200
 
 # 生成点的数量
-POINT_COUNT = 500
+POINT_COUNT = 50
 
 # 计算两点之间的距离（单位：米）
 def calc_distance(lat1, lon1, lat2, lon2):

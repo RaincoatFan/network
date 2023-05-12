@@ -56,7 +56,7 @@ def levy(dim):
 
 def AHA(fun_index, max_it, npop):
     # 改
-    lb, ub, dim = [0],[14.9],485
+    lb, ub, dim = [0],[1.9],48
     if len(lb) == 1:
         lb = lb * dim
         ub = ub * dim

@@ -1,7 +1,7 @@
 from gdmap.distance import main
 
-warehouse_location = '{},{}'.format(120.01534548663,30.0102869508384)
-farm_location = '{},{}'.format(120.015232228827,30.0194616070962)
+warehouse_location = '{},{}'.format(113.505562,22.230699)
+farm_location = '{},{}'.format(113.511648,22.233317)
 
 # # 仓库经纬度（格式：经度,纬度）
 # warehouse_location = '113.296467,22.209200'
