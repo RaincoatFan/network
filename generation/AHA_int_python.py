@@ -81,7 +81,7 @@ def AHA(fun_index, max_it, npop):
     diag_ind = np.diag_indices(npop)
     visit_table[diag_ind] = float('nan')
     for it in range(max_it):
-        print('迭代',it)
+        print('迭代', it)
         # Direction
         visit_table[diag_ind] = float('-inf')
         for i in range(npop):

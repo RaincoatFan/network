@@ -76,22 +76,37 @@ def generation(x):
         del first[0], second[0], real_distance[0]
     print('first',first)
     print('second',second)
+
+    # 获取每个中心的最近中心距离
+    the_shortest_distance_between_centers = []
+    for i in range(len(center_list)):
+        min = 999999
+        for j in range(len(center_list)):
+            for k in range(len(first)):
+                if int(first[k]) == i and int(second[k]) == j or int(first[k]) == j and int(second[k]) == i:
+                    s = float(real_distance[k])
+                    if s < min:
+                        min = s
+        the_shortest_distance_between_centers.append(min)
+    # print(the_shortest_distance_between_centers)
+
     # 设置可达距离 ****************************************
     row_count = 0
     for row in center_list:
         for column in id_list:
             for k in range(len(first)):
                 if int(first[k]) == row and int(second[k]) == column:
-                    # print('1111111111112222222222',row, column,int(first[k]),int(second[k]),k)
                     s = float(real_distance[k])
             # s = haversine((y_list[row],x_list[row]),(y_list[column],x_list[column]))
             # warehouse_location = '{},{}'.format(y_list[row], x_list[row])
             # farm_location = '{},{}'.format(y_list[column], x_list[column])
             # s = main(warehouse_location, farm_location)
-                    if s <= 100:
+            #         if s <= 125:
+                    if s <= the_shortest_distance_between_centers[row] * 0.434:
                         a[:, id_list.index(column)] = 0
                         a[row_count][id_list.index(column)] = 1
         row_count += 1
+
 
 
     # a = [[0, 0, 0, 0, 0, 0, 0, 0],[1, 1, 1, 1, 1, 1, 1, 1]]
@@ -130,7 +145,6 @@ def generation(x):
     for item in range(len(edge)):
         for k in range(len(first)):
             if int(first[k]) == int(edge[item][0]) and int(second[k]) == int(edge[item][1]):
-                # print('1111111111112222222222',int(edge[item][0]), int(edge[item][1]),int(first[k]),int(second[k]),k,real_distance[k])
                 s = float(real_distance[k])
         # 改
         # warehouse_location = '{},{}'.format(y_list[int(edge[item][0])],x_list[int(edge[item][0])])
@@ -197,7 +211,7 @@ def generation(x):
             # farm_location = '{},{}'.format(y_list[int(subgraph_edge_list[item][1])], x_list[int(subgraph_edge_list[item][1])])
             # s = main(warehouse_location, farm_location)
             subgraph_distance.append(s)
-        print('sssssssssssssssssssssssssssssssssss', subgraph_distance)
+        print('subgraph_distance', subgraph_distance)
 
         subgraph_weight_node_edge_from = set()
         for item in range(len(subgraph_edge_list)):

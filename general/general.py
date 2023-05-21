@@ -1,26 +1,33 @@
 import networkx as nx
 import pandas as pd
-from networkx.algorithms.approximation import simulated_annealing_tsp
+from networkx.algorithms import approximation as approx
+import csv
 
 # Read the CSV file into a pandas DataFrame
-df = pd.read_csv('center1_distance.csv')
+first_set = []
+second_set = []
+distance_set = []
 
+with open('center2_distance.csv', encoding='utf-8') as f:
+    for row in csv.reader(f, skipinitialspace=True):
+        first_set.append(row[0])
+        second_set.append(row[1])
+        distance_set.append(row[2])
+    del first_set[0], second_set[0], distance_set[0]
+
+# print(first_set,second_set,distance_set)
+
+edge_set = []
+for item in range(len(first_set)):
+    edge_set.append((str(first_set[item]),str(second_set[item]),float(distance_set[item])))
+
+# print(edge_set)
 # Create an empty graph
 G = nx.Graph()
 
-# Add nodes from the 'first' and 'second' columns
-nodes = set(df['first']).union(df['second'])
-G.add_nodes_from(nodes)
+G.add_weighted_edges_from(edge_set)
 
-# Add edges from the 'first', 'second', and 'distance' columns
-edges = [(row['first'], row['second'], {'distance': row['distance']}) for _, row in df.iterrows()]
-G.add_edges_from(edges)
+cycle = approx.simulated_annealing_tsp(G, "greedy", source="0")
+cost = sum(G[n][nbr]["weight"] for n, nbr in nx.utils.pairwise(cycle))
 
-# Initialize the initial cycle as a list of nodes
-init_cycle = list(nodes)
-
-# Calculate the approximate shortest path using simulated annealing TSP
-approx_shortest_path = simulated_annealing_tsp(G, init_cycle)
-
-# Print the approximate shortest path
-print("Approximate Shortest Path:", approx_shortest_path)
+print(cycle,cost)
