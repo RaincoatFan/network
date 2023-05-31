@@ -38,7 +38,7 @@ strategy = 2
 # 获取高德地图的路径规划点
 def get_route(start, end, mode, amap_key):
     # 这里的url中选择是步行，公交还是驾车路径，本文中driving?表示驾车，具体介绍见：https://lbs.amap.com/api/webservice/guide/api/direction
-    url = f'https://restapi.amap.com/v3/direction/driving?origin={start}&destination={end}&strategy={mode}&key={amap_key}'
+    url = f'https://restapi.amap.com/v3/direction/walking?origin={start}&destination={end}&strategy={mode}&key={amap_key}'
     response = requests.get(url)
     data = response.json()
 

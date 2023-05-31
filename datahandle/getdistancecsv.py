@@ -7,7 +7,7 @@ id_tag = []
 sort_tag = []
 x_tag = []
 y_tag = []
-with open('../general/center2.csv', encoding='utf-8') as f:
+with open('../general/all_data.csv', encoding='utf-8') as f:
     for row in csv.reader(f, skipinitialspace=True):
         id_tag.append(row[0])
         sort_tag.append(row[1])
@@ -41,7 +41,7 @@ for i in range(len(id_tag)):
 data = zip(list1, list2, list_distance)
 header = ['first', 'second', 'distance']
 
-with open('../general/center2_distance.csv', 'w', newline='') as file:
+with open('../general/all_data_distance.csv', 'w', newline='') as file:
     writer = csv.writer(file)
     writer.writerow(header)
     writer.writerows(data)

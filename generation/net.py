@@ -15,7 +15,7 @@ def generation(x):
     x_tag = []
     y_tag = []
     #改
-    with open('../datahandle/real_data.csv', encoding='utf-8') as f:
+    with open('../general/all_data.csv', encoding='utf-8') as f:
         for row in csv.reader(f, skipinitialspace=True):
             id_tag.append(row[0])
             sort_tag.append(row[1])
@@ -59,7 +59,7 @@ def generation(x):
 
     # 种群
     # 改
-    a = np.zeros((2, 48))
+    a = np.zeros((4, 84))
     for i in range(len(x)):
         a[int(x[i]), i] = 1
     print('a',a)
@@ -68,7 +68,7 @@ def generation(x):
     first = []
     second = []
     real_distance = []
-    with open('../datahandle/real_distance.csv', encoding='utf-8') as f:
+    with open('../general/all_data_distance.csv', encoding='utf-8') as f:
         for row in csv.reader(f, skipinitialspace=True):
             first.append(row[0])
             second.append(row[1])
@@ -88,7 +88,7 @@ def generation(x):
                     if s < min:
                         min = s
         the_shortest_distance_between_centers.append(min)
-    # print(the_shortest_distance_between_centers)
+    print('the_shortest_distance_between_centers',the_shortest_distance_between_centers)
 
     # 设置可达距离 ****************************************
     row_count = 0
@@ -101,8 +101,9 @@ def generation(x):
             # warehouse_location = '{},{}'.format(y_list[row], x_list[row])
             # farm_location = '{},{}'.format(y_list[column], x_list[column])
             # s = main(warehouse_location, farm_location)
-            #         if s <= 125:
-                    if s <= the_shortest_distance_between_centers[row] * 0.5:
+            #         print('the_shortest_distance_between_centers[row]',row_count)
+                    # if s <= 125:
+                    if s <= the_shortest_distance_between_centers[row_count] * 0.4:
                         a[:, id_list.index(column)] = 0
                         a[row_count][id_list.index(column)] = 1
         row_count += 1
