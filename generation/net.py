@@ -102,8 +102,8 @@ def generation(x):
             # farm_location = '{},{}'.format(y_list[column], x_list[column])
             # s = main(warehouse_location, farm_location)
             #         print('the_shortest_distance_between_centers[row]',row_count)
-                    # if s <= 125:
-                    if s <= the_shortest_distance_between_centers[row_count] * 0.4:
+                    if s <= 44:
+                    # if s <= the_shortest_distance_between_centers[row_count] * 0.3:
                         a[:, id_list.index(column)] = 0
                         a[row_count][id_list.index(column)] = 1
         row_count += 1
