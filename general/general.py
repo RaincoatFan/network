@@ -8,7 +8,7 @@ first_set = []
 second_set = []
 distance_set = []
 
-with open('data4_distance.csv', encoding='utf-8') as f:
+with open('2_data_distance.csv', encoding='utf-8') as f:
     for row in csv.reader(f, skipinitialspace=True):
         first_set.append(row[0])
         second_set.append(row[1])

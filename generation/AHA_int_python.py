@@ -13,6 +13,8 @@ from pylab import *
 from net import generation
 import os
 os.environ['KMP_DUPLICATE_LIB_OK']='TRUE'
+import time
+start_time = time.time()    # 程序开始时间
 
 def ben_functions(x, function_index):
     # Sphere
@@ -199,3 +201,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+    end_time = time.time()  # 程序结束时间
+    run_time = end_time - start_time  # 程序的运行时间，单位为秒
+    print('运行时间', run_time)
